@@ -1,1 +1,14 @@
+from django.urls import path
+from . import views
 
+urlpatterns = [
+    path('', views.index, name='index'),
+]
+And in views.py:
+
+python
+Copy code
+from django.http import JsonResponse
+
+def index(request):
+    return JsonResponse({"message": "Welcome to ALX Travel Listings!"})
