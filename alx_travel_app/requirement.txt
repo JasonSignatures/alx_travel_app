@@ -1,2 +1,10 @@
-pip install django djangorestframework django-cors-headers drf-yasg django-environ celery
-
+Django>=5.0,<6.0
+djangorestframework>=3.15.0
+django-cors-headers>=4.3.0
+drf-yasg>=1.21.7
+django-environ>=0.11.2
+mysqlclient>=2.2.0
+celery>=5.3.0
+amqp>=5.2.0
+kombu>=5.3.0
+redis>=5.0.0
