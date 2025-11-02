@@ -1,3 +1,27 @@
+🧱 Instructions
+1. Create a Django Project
+
+Create a new Django project named alx_travel_app
+
+Inside it, create an app named listings
+
+django-admin startproject alx_travel_app
+cd alx_travel_app
+python manage.py startapp listings
+
+2. Install Necessary Packages
+
+You’ll need the following dependencies:
+
+pip install django djangorestframework django-cors-headers celery drf-yasg django-environ mysqlclient
+
+
+RabbitMQ runs as an external service (not installed via pip).
+
+3. Highlight: requirements.txt
+
+📄 requirements.txt
+
 Django>=5.0,<6.0
 djangorestframework>=3.15.0
 django-cors-headers>=4.3.0
@@ -8,3 +32,108 @@ celery>=5.3.0
 amqp>=5.2.0
 kombu>=5.3.0
 redis>=5.0.0
+
+
+Optional (for future dev improvements):
+
+django-celery-beat>=2.6.0
+django-celery-results>=2.5.0
+python-dotenv>=1.0.0
+
+
+Then install all dependencies:
+
+pip install -r requirements.txt
+
+4. Configure Settings
+
+Open alx_travel_app/settings.py and:
+
+a. Import and read .env file
+import environ
+import os
+
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+b. Database Configuration (MySQL)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT'),
+    }
+}
+
+c. Add Installed Apps
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+
+    # Third-party
+    'rest_framework',
+    'corsheaders',
+    'drf_yasg',
+
+    # Local app
+    'listings',
+]
+
+d. Add Middleware for CORS
+MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    # other middleware...
+]
+CORS_ALLOW_ALL_ORIGINS = True
+
+5. Add Swagger Documentation
+
+In alx_travel_app/urls.py:
+
+from django.contrib import admin
+from django.urls import path, include
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="ALX Travel API",
+        default_version='v1',
+        description="API documentation for ALX Travel App",
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('listings/', include('listings.urls')),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+]
+
+
+✅ Access Swagger at: http://127.0.0.1:8000/swagger/
+
+6. Initialize Git Repository
+git init
+git add .
+git commit -m "Initial commit: Django project setup with DRF, Swagger, MySQL, and Celery"
+
+✅ Summary
+Component	Description
+Project Name	alx_travel_app
+App Name	listings
+Database	MySQL (via environment variables)
+Packages	Django, DRF, CORS, Celery, Swagger
+Documentation	Available at /swagger/
+Requirements File	requirements.txt (highlighted above)
+Version Control	Git initialized with first commit
